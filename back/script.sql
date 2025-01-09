@@ -6,7 +6,7 @@ USE chillguys;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    
+
     -- informations communes pour tous les utilisateurs
     username VARCHAR(255) UNIQUE NOT NULL,              -- pseudo, obligatoire pour tout les utilisateurs de l'application
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,       -- Date de création de l'utilisateur
@@ -25,14 +25,17 @@ CREATE TABLE users (
     city VARCHAR(50)xx
 );
 
-
 CREATE TABLE messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    content TEXT NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    senderID INT,
-    channelID INT,
-    recipientID INT,
+
+    -- attributs du message
+    content TEXT NOT NULL,                              -- Contenu du message
+    messageTime DATETIME DEFAULT CURRENT_TIMESTAMP,     -- Heure du message
+    senderID INT,                                       -- ID de l'expediteur
+    channelID INT,                                      -- ID du channel
+    receiverID INT,                                     -- ID du destinataire
+
+    -- clés étrangères
     FOREIGN KEY (senderID) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (recipientID) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (channelID) REFERENCES channels(id) ON DELETE CASCADE
@@ -40,15 +43,20 @@ CREATE TABLE messages (
 
 CREATE TABLE channels (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    isPrivate BOOLEAN DEFAULT 0 NOT NULL
+
+    -- attributs des channels
+    channelName VARCHAR(255) UNIQUE NOT NULL,   -- nom du channel
+    isPrivate BOOLEAN DEFAULT 0 NOT NULL        -- attribut privé du channel
 );
 
+-- table relationnelle
 CREATE TABLE channel_members (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userID INT,
     channelID INT,
     joinedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    -- clés étrangères
     FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (channelID) REFERENCES channels(id) ON DELETE CASCADE
 );
