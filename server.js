@@ -5,6 +5,17 @@ const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+app.use((req, res, next) => {
+	bodyParser.json()(req, res, err => {
+		if (err) return res.status(400).send({ message: 'Error : Bad JSON formatting.' });
+
+		next();
+	});
+});
+app.use(cors());
 
 app.use(express.json());
 
