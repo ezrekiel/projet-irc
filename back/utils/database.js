@@ -22,7 +22,7 @@ async function query(sql, values) {
 
 async function getHashedPasswordForUser(username) {
 	try {
-		const result = await query('SELECT pass FROM users WHERE username=?', [username]);
+		const result = await query('SELECT password FROM users WHERE username=?', [username]);
 		if (result.length > 0) return result[0].pass;
 		else return '';
 	} catch (error) {
