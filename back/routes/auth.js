@@ -33,13 +33,13 @@ router.post('/signup', async (req, res) => {
 		const password = sanitizeInput(req.body.password);
 		const phoneNumber = sanitizeInput(req.body.phoneNumber);
 
-		// || !birthday || !gender || !employer || !country || !city || !adress || !zipCode
-		if (!firstName || !lastName || !username || !password || !phoneNumber) return res.status(400).send({ message: 'Error : Missing credentials.' });
+		// || !birthday || !gender || !country || !city || !adress || !zipCode
+		if (!firstName || !lastName || !username || !password || !phoneNumber || !birthday || !gender || !country || !city || !adress || !zipCode) return res.status(400).send({ message: 'Error : Missing credentials.' });
 		if(!isUsernameValid(username)) return res.status(400).send({ message: 'Error : Invalid username.' });
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		const signupQuery = await db.query('INSERT INTO users (username, pass, firstName, lastName, phoneNumber) VALUES (?, ?, ?, ?, ?);', 
+		const signupQuery = await db.query('INSERT INTO users (username, pass, firstName, lastName, phoneNumber, birthday, gender, country, city, adress, zipCode) VALUES (?, ?, ?, ?, ?);', 
 			[username, hashedPassword, firstName, lastName, phoneNumber]
 		);
 
