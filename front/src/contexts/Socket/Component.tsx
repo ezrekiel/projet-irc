@@ -33,6 +33,18 @@ const SocketContextComponent: React.FunctionComponent<ISocketComponentProps> = (
     }, [])
 
     const StartListeners = () => {
+        /** User connected event */
+        socket.on('user_connected', (users: string[]) => {
+            console.info('User connected, new user list received.');
+            SocketDispatch({ type: 'update_users', payload: users });
+        });
+
+        /** User disconnected event */
+        socket.on('user_disconnected', (uid: string) => {
+            console.info('User disconnected');
+            SocketDispatch({ type: 'remove_user', payload: uid });
+        });
+
         /** Reconnect event */
         socket.io.on('reconnect', (attempt) => {
             console.info('Reconnected on attempt: ' + attempt);
