@@ -25,26 +25,6 @@ const SocketContextComponent: React.FunctionComponent<ISocketComponentProps> = (
 
         /** Strat the event listeners */
         StartListeners();
-            /** Reconnect event */
-            socket.io.on('reconnect', (attempt) => {
-                console.info('Reconnected on attempt: ' + attempt);
-            });
-
-            /** Reconnect attempt event */
-            socket.io.on('reconnect_attempt', (attempt) => {
-                console.info('Reconnection attempt: ' + attempt);
-            });
-
-            /** Reconnection error */
-            socket.io.on('reconnect_error', (error) => {
-                console.info('Reconnection error: ', error);
-            });
-
-            /** Reconnection failed */
-            socket.io.on('reconnect_failed', () => {
-                console.info('Reconnection failure');
-                alert('We are unable to connect you to the web socket. ')
-            });
 
         /** Send the handshake */
         SendHandshake();
@@ -52,8 +32,39 @@ const SocketContextComponent: React.FunctionComponent<ISocketComponentProps> = (
         // eslint-disable-next-line
     }, [])
 
-    const StartListeners = () => {};
-    const SendHandshake = () => {};
+    const StartListeners = () => {
+        /** Reconnect event */
+        socket.io.on('reconnect', (attempt) => {
+            console.info('Reconnected on attempt: ' + attempt);
+        });
+
+        /** Reconnect attempt event */
+        socket.io.on('reconnect_attempt', (attempt) => {
+            console.info('Reconnection attempt: ' + attempt);
+        });
+
+        /** Reconnection error */
+        socket.io.on('reconnect_error', (error) => {
+            console.info('Reconnection error: ', error);
+        });
+
+        /** Reconnection failed */
+        socket.io.on('reconnect_failed', () => {
+            console.info('Reconnection failure');
+            alert('We are unable to connect you to the web socket.');
+        });
+    };
+    const SendHandshake = () => {
+        console.info('Sending handshake to server ...');
+
+        socket.emit('handshake', (uid: string, users: string[]) => {
+            console.log('User handshake callback message received');
+            SocketDispatch({ type: 'update_uid', payload: uid});
+            SocketDispatch({ type: 'update_users', payload: users });
+
+            setLoading(false);
+        })
+    };
 
     if (loading) return <p>Loading socket IO ....</p>
 
