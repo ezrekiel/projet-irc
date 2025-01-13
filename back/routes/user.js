@@ -14,20 +14,19 @@ router.post('/', validateToken, async (req, res) => {
 		const isAdmin = sanitizeInput(req.body.isAdmin);
 		const phoneNumber = sanitizeInput(req.body.phoneNumber);
 		const gender = sanitizeInput(req.body.gender);
-		const employer = sanitizeInput(req.body.employer);
 		const adress = sanitizeInput(req.body.adress);
 		const zipCode = sanitizeInput(req.body.zipCode);
 		const country = sanitizeInput(req.body.country);
 		const city = sanitizeInput(req.body.city);
 
-		// || !birthday || !gender || !employer || !country || !city || !adress || !zipCode
-		if (!lastName || !firstName || !username || !password || !isAdmin || !phoneNumber || !gender || !employer || !adress || !zipCode || !country || !city) return res.status(400).send({ message: 'Error : Missing credentials.' });
+		// || !birthday || !gender || !country || !city || !adress || !zipCode
+		if (!lastName || !firstName || !username || !password || !isAdmin || !phoneNumber || !gender || !adress || !zipCode || !country || !city) return res.status(400).send({ message: 'Error : Missing credentials.' });
 		if (!isUsernameValid(username)) return res.status(400).send({ message: 'Error : Invalid username.' });
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		const signupQuery = await db.query('INSERT INTO users (lastName, firstName, username, pass, isAdmin, phoneNumber, gender, employer, adress, zipCode, country, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-			[lastName, firstName, username, hashedPassword, isAdmin, phoneNumber, gender, employer, adress, zipCode, country, city]
+		const signupQuery = await db.query('INSERT INTO users (lastName, firstName, username, pass, isAdmin, phoneNumber, gender, adress, zipCode, country, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+			[lastName, firstName, username, hashedPassword, isAdmin, phoneNumber, gender, adress, zipCode, country, city]
 		);
 
 		if (!(signupQuery.affectedRows > 0)) return res.status(500).send({ message: 'Error : Unable to create User.' });
@@ -41,7 +40,7 @@ router.post('/', validateToken, async (req, res) => {
 // Récupérer tous les users
 router.get('/', validateToken, async (req, res) => {
 	try {
-		const userQuery = await db.query('SELECT users.id AS userID, companyID, username, firstname, lastname FROM users');
+		const userQuery = await db.query('SELECT users.id AS userID, username, firstname, lastname FROM users');
 		return res.status(200).send(userQuery);
 
 	} catch (err) {
@@ -73,7 +72,6 @@ router.put('/:id', validateToken, async (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             phoneNumber: req.body.phoneNumber,
-            employer: req.body.employer,
             username: req.body.username,
             country: req.body.country,
             city: req.body.city,

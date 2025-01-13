@@ -4,15 +4,6 @@ CREATE DATABASE chillguys;
 
 USE chillguys;
 
--- Table des canaux
-CREATE TABLE channels (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-
-    -- Attributs des canaux
-    channelName VARCHAR(255) UNIQUE NOT NULL,           -- Nom unique du canal
-    isPrivate BOOLEAN DEFAULT 0 NOT NULL               -- Indique si le canal est privé
-);
-
 -- Table des utilisateurs
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,6 +26,15 @@ CREATE TABLE users (
     city VARCHAR(50)
 );
 
+-- Table des canaux
+CREATE TABLE channels (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    -- Attributs des canaux
+    channelName VARCHAR(255) UNIQUE NOT NULL,           -- Nom unique du canal
+    isPrivate BOOLEAN DEFAULT 0 NOT NULL                -- Indique si le canal est privé
+);
+
 -- Table des messages
 CREATE TABLE messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,10 +44,10 @@ CREATE TABLE messages (
     messageTime DATETIME DEFAULT CURRENT_TIMESTAMP,     -- Heure du message
     senderID INT,                                       -- ID de l'expéditeur
     channelID INT,                                      -- ID du canal
-    receiverID INT,                                     -- ID du destinataire
+    receiverID INT,                                     -- ID du destinataire (messages privés)
 
     -- Clés étrangères
-    FOREIGN KEY (senderID) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (senderID) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiverID) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (channelID) REFERENCES channels(id) ON DELETE CASCADE
 );
