@@ -21,5 +21,21 @@ export class ServerSocket {
                 origin: '*'
             }
         });
+
+        this.io.on('connect', this.StartListeners);
+
+        console.info('Socket IO started');
+    }
+
+    StartListeners = (socket: Socket) => {
+        console.info('Message received from ' + socket.id);
+
+        socket.on('handshake', () => {
+            console.info('Handshake received from ' + socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.info('Disconnect received from ' + socket.id);
+        })
     }
 }
