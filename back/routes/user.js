@@ -7,11 +7,11 @@ const bcrypt = require('bcrypt');
 
 router.post('/', validateToken, async (req, res) => {
 	try {
+		//const isAdmin = sanitizeInput(req.body.isAdmin);
 		const lastName = sanitizeInput(req.body.lastName);
 		const firstName = sanitizeInput(req.body.firstName);
 		const username = sanitizeInput(req.body.username);
 		const password = sanitizeInput(req.body.password);
-		const isAdmin = sanitizeInput(req.body.isAdmin);
 		const phoneNumber = sanitizeInput(req.body.phoneNumber);
 		const gender = sanitizeInput(req.body.gender);
 		const adress = sanitizeInput(req.body.adress);
@@ -19,14 +19,14 @@ router.post('/', validateToken, async (req, res) => {
 		const country = sanitizeInput(req.body.country);
 		const city = sanitizeInput(req.body.city);
 
-		// || !birthday || !gender || !country || !city || !adress || !zipCode
-		if (!lastName || !firstName || !username || !password || !isAdmin || !phoneNumber || !gender || !adress || !zipCode || !country || !city) return res.status(400).send({ message: 'Error : Missing credentials.' });
+		//  || !isAdmin || !birthday || !gender || !country || !city || !adress || !zipCode
+		if (!lastName || !firstName || !username || !password|| !phoneNumber || !gender || !adress || !zipCode || !country || !city) return res.status(400).send({ message: 'Error : Missing credentials.' });
 		if (!isUsernameValid(username)) return res.status(400).send({ message: 'Error : Invalid username.' });
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		const signupQuery = await db.query('INSERT INTO users (lastName, firstName, username, pass, isAdmin, phoneNumber, gender, adress, zipCode, country, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-			[lastName, firstName, username, hashedPassword, isAdmin, phoneNumber, gender, adress, zipCode, country, city]
+		const signupQuery = await db.query('INSERT INTO users (lastName, firstName, username, pass, phoneNumber, gender, adress, zipCode, country, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+			[lastName, firstName, username, hashedPassword, phoneNumber, gender, adress, zipCode, country, city]
 		);
 
 		if (!(signupQuery.affectedRows > 0)) return res.status(500).send({ message: 'Error : Unable to create User.' });
@@ -124,7 +124,7 @@ router.delete('/:userID', validateToken, async (req, res) => {
 });
 
 async function getUserDetails(username) {
-	const userDetailsQuery = await db.query('SELECT users.id AS userID, isAdmin, username, firstname, lastname FROM users WHERE username = ?', [username]);
+	const userDetailsQuery = await db.query('SELECT users.id AS userID, username, firstname, lastname FROM users WHERE username = ?', [username]);
 	if (!(userDetailsQuery.length > 0)) return {};
 	return userDetailsQuery[0];
 }
