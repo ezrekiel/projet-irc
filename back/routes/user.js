@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
+// Créer un user
 router.post('/', validateToken, async (req, res) => {
 	try {
 		//const isAdmin = sanitizeInput(req.body.isAdmin);
@@ -67,7 +68,7 @@ router.put('/:id', validateToken, async (req, res) => {
         const updates = [];
         const values = [];
 
-        // Define fields and handle password hashing separately
+        // Definition des champs, mot de passe géré plus tard
         const fields = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
@@ -86,14 +87,14 @@ router.put('/:id', validateToken, async (req, res) => {
             }
         }
 
-        // Handle password separately for hashing
+        // Gestion du hash
         if (req.body.password) {
             const hashedPassword = await bcrypt.hash(sanitizeInput(req.body.password), 10);
             updates.push("pass = ?");
             values.push(hashedPassword);
         }
 
-        // If no updates, return bad request
+        // En cas d'absence de retour, revoie une erreur
         if (!updates.length) return res.status(400).send({ message: 'No fields provided for update.' });
 
         // Build query

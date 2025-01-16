@@ -39,7 +39,7 @@ router.post('/signup', async (req, res) => {
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		const signupQuery = await db.query('INSERT INTO users (username, pass, firstName, lastName, phoneNumber, birthday, gender, country, city, adress, zipCode) VALUES (?, ?, ?, ?, ?);', 
+		const signupQuery = await db.query('INSERT INTO users (username, pass, firstName, lastName, phoneNumber, birthday, gender, country, city, adress, zipCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', 
 			[username, hashedPassword, firstName, lastName, phoneNumber]
 		);
 
