@@ -1,22 +1,12 @@
-import { useContext } from "react";
-import SocketContext from "../contexts/Socket/Context";
+import Info from "../components/Info";
+import Board from "../components/Board";
 
-export interface IApplicationProps {}
-
-const Home: React.FunctionComponent<IApplicationProps> = (props) => {
-  const { socket, uid, users } = useContext(SocketContext).SocketState;
-
+const Home = () => {
   return (
-    <div>
-      <h2>Socket IO Information</h2>
-      <p>
-        Your user ID: <strong>{uid}</strong>
-        <br />
-        Users online: <strong>{users.length}</strong>
-        <br />
-        Socket ID: <strong>{socket?.id}</strong>
-      </p>
-    </div>
+    <>
+      <Info />
+      <Board />
+    </>
   );
 };
 
