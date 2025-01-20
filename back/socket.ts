@@ -7,7 +7,7 @@ export class ServerSocket {
     public io: Server;
 
     // liste de tous les utilisateurs connectés
-    public users: { [uid: string]: string};
+    public users: { [uid: string]: string };
 
     constructor (server: HTTPServer) {
         ServerSocket.instance = this;
@@ -52,6 +52,11 @@ export class ServerSocket {
             const uid = v4();
             this.users[uid] = socket.id;
             const users = Object.values(this.users);
+
+            console.info('Sending callback for handshake...');
+            callback(uid, users);
+            
+            // envoi du nouveau user aux autres connectés
         });
 
         socket.on('disconnect', () => {
