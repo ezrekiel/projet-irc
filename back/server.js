@@ -19,6 +19,8 @@ app.use(cors());
 
 app.use(express.json());
 
+new ServerSocket(httpServer);
+
 app.get('/', (req, res) => {
     res.send('Bienvenue sur le serveur');
 });
