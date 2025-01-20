@@ -30,8 +30,28 @@ export class ServerSocket {
     StartListeners = (socket: Socket) => {
         console.info('Message received from ' + socket.id);
 
-        socket.on('handshake', () => {
+        socket.on('handshake', (callback: (uid: string, users: string[]) => void) => {
             console.info('Handshake received from ' + socket.id);
+
+            // check en cas reconnexion
+            const reconnected = Object.values(this.users).includes(socket.id);
+
+            if (reconnected) {
+                console.info('This user has reconnected.');
+                const uid = this.GetUidFromSocketId(socket.id);
+                const users = Object.values(this.users);
+
+                if (uid) {
+                    console.info('Sending callback for reconnect...');
+                    callback(uid, users);
+                    return;
+                }
+            }
+
+            // generer un nouveau user
+            const uid = v4();
+            this.users[uid] = socket.id;
+            const users = Object.values(this.users);
         });
 
         socket.on('disconnect', () => {
