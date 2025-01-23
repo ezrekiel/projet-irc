@@ -1,12 +1,23 @@
+// imports modules
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 
+// appels modules
 const app = express();
 const server = http.createServer(app);
-const io = Server(server);
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
+const io = new Server(server);
+
+// definition des routes
+const authRouter = require('./routes/auth');
+const channelRouter = require('./routes/channel');
+const messageRouter = require('./routes/message');
+const resourceRouter = require('./routes/resource');
+const userRouter = require('./routes/user');
 
 app.use((req, res, next) => {
 	bodyParser.json()(req, res, err => {
@@ -15,9 +26,12 @@ app.use((req, res, next) => {
 		next();
 	});
 });
-app.use(cors());
 
+app.use(cors());
 app.use(express.json());
+
+app.use('/auth', authRouter);
+app.use('/channel', channelRouter);
 
 server.ServerSocket(httpServer);
 
