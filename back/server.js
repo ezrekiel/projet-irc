@@ -13,10 +13,10 @@ const cors = require('cors');
 const io = new Server(server);
 
 // definition des routes
+// const resourceRouter = require('./routes/resource'); --- route exemple
 const authRouter = require('./routes/auth');
 const channelRouter = require('./routes/channel');
 const messageRouter = require('./routes/message');
-const resourceRouter = require('./routes/resource');
 const userRouter = require('./routes/user');
 
 app.use((req, res, next) => {
@@ -30,10 +30,14 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+// Routes
+// app.use('/resource', resourceRouter); --- route exemple
 app.use('/auth', authRouter);
 app.use('/channel', channelRouter);
+app.use('/message', messageRouter);
+app.use('/user', userRouter);
 
-server.ServerSocket(httpServer);
+server = new ServerSocket(httpServer);
 
 app.get('/', (req, res) => {
     res.send('Bienvenue sur le serveur');
