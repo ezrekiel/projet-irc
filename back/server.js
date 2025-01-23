@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = Server(server);
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
@@ -19,7 +19,7 @@ app.use(cors());
 
 app.use(express.json());
 
-new ServerSocket(httpServer);
+server.ServerSocket(httpServer);
 
 app.get('/', (req, res) => {
     res.send('Bienvenue sur le serveur');
