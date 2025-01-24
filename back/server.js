@@ -37,8 +37,6 @@ app.use('/channel', channelRouter);
 app.use('/message', messageRouter);
 app.use('/user', userRouter);
 
-server = new ServerSocket(httpServer);
-
 app.get('/', (req, res) => {
     res.send('Bienvenue sur le serveur');
 });
