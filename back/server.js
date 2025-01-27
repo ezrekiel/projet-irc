@@ -40,7 +40,7 @@ app.use('/user', userRouter);
 app.get('/', (req, res) => {
     res.send('Bienvenue sur le serveur');
 });
-
+// commentaire test push github
 io.on('connection', (socket) => {
     console.log('Un utilisateur s\'est connecté');
 
