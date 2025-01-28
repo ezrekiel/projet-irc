@@ -8,8 +8,9 @@ const Info: React.FunctionComponent<IApplicationProps> = () => {
   
     return (
       <>
-        <h2>Socket IO Information</h2>
+        
         <p>
+        <h2>Socket IO Information</h2>
           Your user ID: <strong>{uid}</strong>
           <br />
           Users online: <strong>{users.length}</strong>

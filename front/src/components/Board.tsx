@@ -11,12 +11,12 @@ const Board: React.FC = () => {
 
   return (
     <>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
-      <div className="input">
+      <div className="board">
+        <ul>
+          {messages.map((msg, index) => (
+            <li key={index}>{msg}</li>
+          ))}
+        </ul>
         <Input onSubmit={handleNewMessage} />
       </div>
     </>
