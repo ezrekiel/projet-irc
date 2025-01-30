@@ -63,3 +63,6 @@ CREATE TABLE channel_members (
     FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (channelID) REFERENCES channels(id) ON DELETE CASCADE
 );
+
+-- Insertion test
+INSERT INTO users (username, password, firstName, lastName, phoneNumber, birthday, gender, adress, zipCode, country, city) VALUES ('test', 'root', 'axel', 'theule', '0612345678', '2000-01-01', 1, '1 rue du test', '34000', 'france', 'montpellier');

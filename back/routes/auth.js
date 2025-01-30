@@ -32,15 +32,21 @@ router.post('/signup', async (req, res) => {
 		const username = sanitizeInput(req.body.username);
 		const password = sanitizeInput(req.body.password);
 		const phoneNumber = sanitizeInput(req.body.phoneNumber);
+		const birthday = sanitizeInput(req.body.birthday);
+		const gender = sanitizeInput(req.body.gender);
+		const country = sanitizeInput(req.body.country);
+		const city = sanitizeInput(req.body.city);
+		const address = sanitizeInput(req.body.address);
+		const zipCode = sanitizeInput(req.body.zipCode);
 
-		// || !birthday || !gender || !country || !city || !adress || !zipCode
-		if (!firstName || !lastName || !username || !password || !phoneNumber || !birthday || !gender || !country || !city || !adress || !zipCode) return res.status(400).send({ message: 'Error : Missing credentials.' });
+		// || !birthday || !gender || !country || !city || !address || !zipCode
+		if (!firstName || !lastName || !username || !password || !phoneNumber || !birthday || !gender || !country || !city || !address || !zipCode) return res.status(400).send({ message: 'Error : Missing credentials.' });
 		if(!isUsernameValid(username)) return res.status(400).send({ message: 'Error : Invalid username.' });
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		const signupQuery = await db.query('INSERT INTO users (username, pass, firstName, lastName, phoneNumber, birthday, gender, country, city, adress, zipCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', 
-			[username, hashedPassword, firstName, lastName, phoneNumber]
+		const signupQuery = await db.query('INSERT INTO users (username, password, firstName, lastName, phoneNumber, birthday, gender, country, city, address, zipCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', 
+			[username, hashedPassword, firstName, lastName, phoneNumber, birthday, gender, country, city, address, zipCode]
 		);
 
 		if (!(signupQuery.affectedRows > 0)) return res.status(500).send({ message: 'Error : Unable to create User.' });
@@ -52,7 +58,7 @@ router.post('/signup', async (req, res) => {
 });
 
 async function getUserDetails(username) {
-	const userDetailsQuery = await db.query('SELECT users.id AS userID, isAdmin, username, firstname, lastname FROM users WHERE username = ?', [username]);
+	const userDetailsQuery = await db.query('SELECT users.id AS userID, username, firstname, lastname FROM users WHERE username = ?', [username]);
 	if (!(userDetailsQuery.length > 0)) return {};
 	return userDetailsQuery[0];
 }
