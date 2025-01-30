@@ -14,6 +14,7 @@ CREATE TABLE users (
     lastConnexion DATETIME DEFAULT CURRENT_TIMESTAMP,   -- Dernière connexion (utile pour les invités)
 
     -- Informations uniquement pour les inscrits
+    email VARCHAR(255),
     password VARCHAR(255),
     firstName VARCHAR(60),
     lastName VARCHAR(50),
