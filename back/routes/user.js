@@ -8,8 +8,6 @@ const bcrypt = require('bcrypt');
 // Créer un user
 router.post('/', validateToken, async (req, res) => {
 	try {
-		//const isAdmin = sanitizeInput(req.body.isAdmin);
-		
 		const firstName = sanitizeInput(req.body.firstName);
 		const lastName = sanitizeInput(req.body.lastName);
 		const username = sanitizeInput(req.body.username);
@@ -24,12 +22,12 @@ router.post('/', validateToken, async (req, res) => {
 		const zipCode = sanitizeInput(req.body.zipCode);
 
 		if (!firstName || !lastName || !username || !email || !password || !phoneNumber || !birthday || !gender || !country || !city || !address || !zipCode) return res.status(400).send({ message: 'Error : Missing credentials.' });
-		if (!isUsernameValid(username)) return res.status(400).send({ message: 'Error : Invalid username.' });
+		if(!isEmailValid(email)) return res.status(400).send({ message: 'Error : Invalid email.' });
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		const signupQuery = await db.query('INSERT INTO users (lastName, firstName, username, pass, phoneNumber, gender, adress, zipCode, country, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-			[lastName, firstName, username, hashedPassword, phoneNumber, gender, adress, zipCode, country, city]
+		const signupQuery = await db.query('INSERT INTO users (username, email, password, firstName, lastName, phoneNumber, birthday, gender, country, city, address, zipCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', 
+			[username, email, hashedPassword, firstName, lastName, phoneNumber, birthday, gender, country, city, address, zipCode]
 		);
 
 		if (!(signupQuery.affectedRows > 0)) return res.status(500).send({ message: 'Error : Unable to create User.' });
@@ -54,7 +52,7 @@ router.get('/', validateToken, async (req, res) => {
 // Récupérer un user par son ID
 router.get('/:userID', validateToken, async (req, res) => {
 	try {
-		const userQuery = await db.query('SELECT users.id AS userID, companyID, username, firstname, lastname, phoneNumber, adress AS address, zipCode, country, city FROM users WHERE id = ?', [req.params.userID]);
+		const userQuery = await db.query('SELECT users.id AS userID, username, email, firstname, lastname, phoneNumber, address AS address, zipCode, country, city FROM users WHERE id = ?', [req.params.userID]);
 		console.log(userQuery);
 
 		if (userQuery.length > 0) return res.status(200).send(userQuery[0]);
@@ -78,7 +76,7 @@ router.put('/:id', validateToken, async (req, res) => {
             username: req.body.username,
             country: req.body.country,
             city: req.body.city,
-            adress: req.body.address,
+            address: req.body.address,
             zipCode: req.body.zipCode
         };
 
@@ -113,7 +111,7 @@ router.put('/:id', validateToken, async (req, res) => {
     }
 });
 
-// Suppression de user
+// Suppression d'un user
 router.delete('/:userID', validateToken, async (req, res) => {
 	try {
 		const userQuery = await db.query('DELETE FROM  users WHERE id = ?', [req.params.userID]);
@@ -132,7 +130,7 @@ async function getUserDetails(username) {
 	return userDetailsQuery[0];
 }
 
-function isUsernameValid(username) {
+function isEmailValid(username) {
 	const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,5}$/;
 	return regex.test(username);
 }
