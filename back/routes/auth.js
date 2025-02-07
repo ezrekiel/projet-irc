@@ -13,7 +13,6 @@ router.post('/signin', async (req, res) => {
 
 		const hashedPassword = await db.getHashedPasswordForUser(email);
 		const bcryptResult = await bcrypt.compare(password, hashedPassword);
-		console.log(bcryptResult);
 		if (!bcryptResult) return res.status(401).send({ message: 'Invalid credentials!' });
 
 		const token = generateToken({ email });

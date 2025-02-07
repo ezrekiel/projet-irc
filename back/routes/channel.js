@@ -4,40 +4,40 @@ const db = require('../utils/database');
 const express = require('express');
 const router = express.Router();
 
-//Create channel
+// Créer un channel
 router.post('/', validateToken, async (req, res) => {
-	const resourceName = sanitizeInput(req.body.resourceName);
+	const channelName = sanitizeInput(req.body.channelName);
 
-	if (!resourceName) return res.status(400).send({ message: 'Error : Missing information.' });
+	if (!channelName) return res.status(400).send({ message: 'Error : Missing information.' });
 
 	try {
-		const resourceQuery = await db.query('INSERT INTO channels (resourceName) VALUES (?)', [resourceName]);
+		const channelQuery = await db.query('INSERT INTO channels (channelName) VALUES (?)', [channelName]);
 		
-		if (resourceQuery.affectedRows > 0) return res.status(200).send({ message: 'resource created successfully.'});
-		return res.status(500).send({ message: 'Error : Unable to create resource.' });
+		if (channelQuery.affectedRows > 0) return res.status(200).send({ message: 'channel created successfully.'});
+		return res.status(500).send({ message: 'Error : Unable to create channel.' });
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to create resource.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to create channel.', error: err.message });
 	}
 });
 
-//Get All Resources
+// Récupérer tous les channels
 router.get('/', validateToken, async (req, res) => {
 	try {
-		const resourceQuery = await db.query('SELECT * FROM resource');
-		return res.status(200).send(resourceQuery);
+		const channelQuery = await db.query('SELECT * FROM channels');
+		return res.status(200).send(channelQuery);
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to fetch resources.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to fetch channels.', error: err.message });
 	}
 });
 
-//Get Resource By ID
+// Récuperer un channel par ID
 router.get('/:resourceID', validateToken, async (req, res) => {
 	try {
-		const resourceQuery = await db.query('SELECT * FROM resource WHERE resourceID = ?', [req.params.resourceID]);
+		const channelQuery = await db.query('SELECT * FROM resource WHERE resourceID = ?', [req.params.resourceID]);
 
-		if (resourceQuery.length > 0) return res.status(200).send(resourceQuery[0]);
+		if (channelQuery.length > 0) return res.status(200).send(channelQuery[0]);
 		return res.status(404).send({ message: 'Error : resource not found.' });
 
 	} catch (err) {
@@ -45,14 +45,14 @@ router.get('/:resourceID', validateToken, async (req, res) => {
 	}
 });
 
-//Edit Resource
+// Modifier un channel
 router.put('/:resourceID', validateToken, async (req, res) => {
 	const resourceName = sanitizeInput(req.body.resourceName);
 
 	try {
-		const resourceQuery = await db.query('UPDATE resource SET resourceName = ? WHERE resourceID = ?', [chatName, req.params.resourceID]);
+		const channelQuery = await db.query('UPDATE resource SET resourceName = ? WHERE resourceID = ?', [chatName, req.params.resourceID]);
 
-		if (resourceQuery.affectedRows > 0) return res.status(200).send({ message: 'resource updated successfully.' });
+		if (channelQuery.affectedRows > 0) return res.status(200).send({ message: 'resource updated successfully.' });
 		return res.status(404).send({ message: 'Error : resource not found.' });
 
 	} catch (err) {
@@ -60,12 +60,12 @@ router.put('/:resourceID', validateToken, async (req, res) => {
 	}
 });
 
-//Delete Resource
+// Supprimer un channel
 router.delete('/:resourceID', validateToken, async (req, res) => {
 	try {
-		const resourceQuery = await db.query('DELETE FROM resource WHERE resourceID = ?', [req.params.resourceID]);
+		const channelQuery = await db.query('DELETE FROM resource WHERE resourceID = ?', [req.params.resourceID]);
 
-		if (resourceQuery.affectedRows > 0) return res.status(200).send({ message: 'resource deleted successfully.' });
+		if (channelQuery.affectedRows > 0) return res.status(200).send({ message: 'resource deleted successfully.' });
 		return res.status(404).send({ message: 'Error : resource not found.' });
 
 	} catch (err) {
