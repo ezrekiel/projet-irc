@@ -9,19 +9,21 @@ const bcrypt = require('bcrypt');
 router.post('/', validateToken, async (req, res) => {
 	try {
 		//const isAdmin = sanitizeInput(req.body.isAdmin);
-		const lastName = sanitizeInput(req.body.lastName);
+		
 		const firstName = sanitizeInput(req.body.firstName);
+		const lastName = sanitizeInput(req.body.lastName);
 		const username = sanitizeInput(req.body.username);
+		const email = sanitizeInput(req.body.email);
 		const password = sanitizeInput(req.body.password);
 		const phoneNumber = sanitizeInput(req.body.phoneNumber);
+		const birthday = sanitizeInput(req.body.birthday);
 		const gender = sanitizeInput(req.body.gender);
-		const adress = sanitizeInput(req.body.adress);
-		const zipCode = sanitizeInput(req.body.zipCode);
 		const country = sanitizeInput(req.body.country);
 		const city = sanitizeInput(req.body.city);
+		const address = sanitizeInput(req.body.address);
+		const zipCode = sanitizeInput(req.body.zipCode);
 
-		//  || !isAdmin || !birthday || !gender || !country || !city || !adress || !zipCode
-		if (!lastName || !firstName || !username || !password|| !phoneNumber || !gender || !adress || !zipCode || !country || !city) return res.status(400).send({ message: 'Error : Missing credentials.' });
+		if (!firstName || !lastName || !username || !email || !password || !phoneNumber || !birthday || !gender || !country || !city || !address || !zipCode) return res.status(400).send({ message: 'Error : Missing credentials.' });
 		if (!isUsernameValid(username)) return res.status(400).send({ message: 'Error : Invalid username.' });
 
 		const hashedPassword = await bcrypt.hash(password, 10);

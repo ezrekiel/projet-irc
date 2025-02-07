@@ -13,6 +13,7 @@ router.post('/signin', async (req, res) => {
 
 		const hashedPassword = await db.getHashedPasswordForUser(email);
 		const bcryptResult = await bcrypt.compare(password, hashedPassword);
+		console.log(bcryptResult);
 		if (!bcryptResult) return res.status(401).send({ message: 'Invalid credentials!' });
 
 		const token = generateToken({ email });
@@ -40,7 +41,6 @@ router.post('/signup', async (req, res) => {
 		const address = sanitizeInput(req.body.address);
 		const zipCode = sanitizeInput(req.body.zipCode);
 
-		// || !birthday || !gender || !country || !city || !address || !zipCode
 		if (!firstName || !lastName || !username || !email || !password || !phoneNumber || !birthday || !gender || !country || !city || !address || !zipCode) return res.status(400).send({ message: 'Error : Missing credentials.' });
 		if(!isEmailValid(email)) return res.status(400).send({ message: 'Error : Invalid email.' });
 
