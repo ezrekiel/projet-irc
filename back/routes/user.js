@@ -130,7 +130,7 @@ async function getUserDetails(username) {
 	return userDetailsQuery[0];
 }
 
-function isEmailValid(username) {
+function isUsernameValid(username) {
 	const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,5}$/;
 	return regex.test(username);
 }

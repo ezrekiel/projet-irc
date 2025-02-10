@@ -66,4 +66,4 @@ CREATE TABLE channel_members (
 );
 
 -- Insertion test
-INSERT INTO users (username, password, firstName, lastName, phoneNumber, birthday, gender, address, zipCode, country, city) VALUES ('test', 'root', 'axel', 'theule', '0612345678', '2000-01-01', 1, '1 rue du test', '34000', 'france', 'montpellier');
+INSERT INTO users (username, password, firstName, lastName, phoneNumber, birthday, gender, adxxdress, zipCode, country, city) VALUES ('test', 'root', 'axel', 'theule', '0612345678', '2000-01-01', 1, '1 rue du test', '34000', 'france', 'montpellier');

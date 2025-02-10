@@ -33,43 +33,43 @@ router.get('/', validateToken, async (req, res) => {
 });
 
 // Récuperer un channel par ID
-router.get('/:resourceID', validateToken, async (req, res) => {
+router.get('/:channelID', validateToken, async (req, res) => {
 	try {
-		const channelQuery = await db.query('SELECT * FROM resource WHERE resourceID = ?', [req.params.resourceID]);
+		const channelQuery = await db.query('SELECT * FROM channels WHERE id = ?', [req.params.channelID]);
 
 		if (channelQuery.length > 0) return res.status(200).send(channelQuery[0]);
-		return res.status(404).send({ message: 'Error : resource not found.' });
+		return res.status(404).send({ message: 'Error : channel not found.' });
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to fetch the resource.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to fetch the channel.', error: err.message });
 	}
 });
 
 // Modifier un channel
-router.put('/:resourceID', validateToken, async (req, res) => {
-	const resourceName = sanitizeInput(req.body.resourceName);
+router.put('/:channelID', validateToken, async (req, res) => {
+	const channelName = sanitizeInput(req.body.channelName);
 
 	try {
-		const channelQuery = await db.query('UPDATE resource SET resourceName = ? WHERE resourceID = ?', [chatName, req.params.resourceID]);
+		const channelQuery = await db.query('UPDATE channels SET channelName = ? WHERE id = ?', [channelName, req.params.channelID]);
 
-		if (channelQuery.affectedRows > 0) return res.status(200).send({ message: 'resource updated successfully.' });
-		return res.status(404).send({ message: 'Error : resource not found.' });
+		if (channelQuery.affectedRows > 0) return res.status(200).send({ message: 'channel updated successfully.' });
+		return res.status(404).send({ message: 'Error : channel not found.' });
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to update resource.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to update channel.', error: err.message });
 	}
 });
 
 // Supprimer un channel
-router.delete('/:resourceID', validateToken, async (req, res) => {
+router.delete('/:channelID', validateToken, async (req, res) => {
 	try {
-		const channelQuery = await db.query('DELETE FROM resource WHERE resourceID = ?', [req.params.resourceID]);
+		const channelQuery = await db.query('DELETE FROM channels WHERE id = ?', [req.params.channelID]);
 
-		if (channelQuery.affectedRows > 0) return res.status(200).send({ message: 'resource deleted successfully.' });
-		return res.status(404).send({ message: 'Error : resource not found.' });
+		if (channelQuery.affectedRows > 0) return res.status(200).send({ message: 'channel deleted successfully.' });
+		return res.status(404).send({ message: 'Error : channel not found.' });
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to delete resource.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to delete channel.', error: err.message });
 	}
 });
 
