@@ -4,24 +4,41 @@ const db = require('../utils/database');
 const express = require('express');
 const router = express.Router();
 
-//Create Resource
+// Créer un message
 router.post('/', validateToken, async (req, res) => {
-	const resourceName = sanitizeInput(req.body.resourceName);
+	const messageContent = sanitizeInput(req.body.messageContent);
+	const messageSender = sanitizeInput(req.body.messageSender);
+	const messageReceiver = sanitizeInput(req.body.messageReceiver);
+	const messageChannel = sanitizeInput(req.body.messageChannel);
 
-	if (!resourceName) return res.status(400).send({ message: 'Error : Missing information.' });
+	if (!messageContent) return res.status(400).send({ message: 'Erreur : Message vide.' });
 
-	try {
-		const resourceQuery = await db.query('INSERT INTO resource (resourceName) VALUES (?)', [resourceName]);
-		
-		if (resourceQuery.affectedRows > 0) return res.status(200).send({ message: 'resource created successfully.'});
-		return res.status(500).send({ message: 'Error : Unable to create resource.' });
+	if (!messageReceiver) {
+		try {
+			const messageQuery = await db.query('INSERT INTO messages (content, senderID, channelID) VALUES (?, ?, ?)', [messageContent, messageSender, messageChannel]);
+			
+			if (messageQuery.affectedRows > 0) return res.status(200).send({ message: 'message created successfully.'});
+			return res.status(500).send({ message: 'Error : Unable to create message.' });
+	
+		} catch (err) {
+			res.status(500).send({ message: 'Error : Unable to create message.', error: err.message });
+		}
+	}
 
-	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to create resource.', error: err.message });
+	if (messageReceiver) {
+		try {
+			const messageQuery = await db.query('INSERT INTO messages (content, senderID, receiverID) VALUES (?, ?, ?)', [messageContent, messageSender, messageReceiver]);
+			
+			if (messageQuery.affectedRows > 0) return res.status(200).send({ message: 'message created successfully.'});
+			return res.status(500).send({ message: 'Error : Unable to create message.' });
+	
+		} catch (err) {
+			res.status(500).send({ message: 'Error : Unable to create message.', error: err.message });
+		}
 	}
 });
 
-//Get All Resources
+// Récupérer tous les messages
 router.get('/', validateToken, async (req, res) => {
 	try {
 		const resourceQuery = await db.query('SELECT * FROM resource');
@@ -32,7 +49,7 @@ router.get('/', validateToken, async (req, res) => {
 	}
 });
 
-//Get Resource By ID
+// Récupérer un message par ID
 router.get('/:resourceID', validateToken, async (req, res) => {
 	try {
 		const resourceQuery = await db.query('SELECT * FROM resource WHERE resourceID = ?', [req.params.resourceID]);
@@ -45,7 +62,7 @@ router.get('/:resourceID', validateToken, async (req, res) => {
 	}
 });
 
-//Edit Resource
+// Modifier un message
 router.put('/:resourceID', validateToken, async (req, res) => {
 	const resourceName = sanitizeInput(req.body.resourceName);
 
@@ -60,7 +77,7 @@ router.put('/:resourceID', validateToken, async (req, res) => {
 	}
 });
 
-//Delete Resource
+// Supprimer un message
 router.delete('/:resourceID', validateToken, async (req, res) => {
 	try {
 		const resourceQuery = await db.query('DELETE FROM resource WHERE resourceID = ?', [req.params.resourceID]);

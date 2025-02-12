@@ -45,7 +45,7 @@ CREATE TABLE messages (
     messageTime DATETIME DEFAULT CURRENT_TIMESTAMP,     -- Heure du message
     senderID INT,                                       -- ID de l'expéditeur
     channelID INT,                                      -- ID du canal
-    receiverID INT,                                     -- ID du destinataire (messages privés)
+    receiverID INT,                                     -- ID du destinataire (uniquement pour messages privés)
 
     -- Clés étrangères
     FOREIGN KEY (senderID) REFERENCES users(id) ON DELETE CASCADE,
