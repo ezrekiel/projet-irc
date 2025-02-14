@@ -41,52 +41,52 @@ router.post('/', validateToken, async (req, res) => {
 // Récupérer tous les messages
 router.get('/', validateToken, async (req, res) => {
 	try {
-		const resourceQuery = await db.query('SELECT * FROM resource');
-		return res.status(200).send(resourceQuery);
+		const messageQuery = await db.query('SELECT * FROM messages');
+		return res.status(200).send(messageQuery);
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to fetch resources.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to fetch messages.', error: err.message });
 	}
 });
 
 // Récupérer un message par ID
-router.get('/:resourceID', validateToken, async (req, res) => {
+router.get('/:messageID', validateToken, async (req, res) => {
 	try {
-		const resourceQuery = await db.query('SELECT * FROM resource WHERE resourceID = ?', [req.params.resourceID]);
+		const messageQuery = await db.query('SELECT * FROM messages WHERE messageID = ?', [req.params.messageID]);
 
-		if (resourceQuery.length > 0) return res.status(200).send(resourceQuery[0]);
-		return res.status(404).send({ message: 'Error : resource not found.' });
+		if (messageQuery.length > 0) return res.status(200).send(messageQuery[0]);
+		return res.status(404).send({ message: 'Error : message not found.' });
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to fetch the resource.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to fetch the message.', error: err.message });
 	}
 });
 
 // Modifier un message
-router.put('/:resourceID', validateToken, async (req, res) => {
-	const resourceName = sanitizeInput(req.body.resourceName);
+router.put('/:messageID', validateToken, async (req, res) => {
+	const messageName = sanitizeInput(req.body.messageName);
 
 	try {
-		const resourceQuery = await db.query('UPDATE resource SET resourceName = ? WHERE resourceID = ?', [chatName, req.params.resourceID]);
+		const messageQuery = await db.query('UPDATE message SET messageName = ? WHERE messageID = ?', [chatName, req.params.messageID]);
 
-		if (resourceQuery.affectedRows > 0) return res.status(200).send({ message: 'resource updated successfully.' });
-		return res.status(404).send({ message: 'Error : resource not found.' });
+		if (messageQuery.affectedRows > 0) return res.status(200).send({ message: 'message updated successfully.' });
+		return res.status(404).send({ message: 'Error : message not found.' });
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to update resource.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to update message.', error: err.message });
 	}
 });
 
 // Supprimer un message
-router.delete('/:resourceID', validateToken, async (req, res) => {
+router.delete('/:messageID', validateToken, async (req, res) => {
 	try {
-		const resourceQuery = await db.query('DELETE FROM resource WHERE resourceID = ?', [req.params.resourceID]);
+		const messageQuery = await db.query('DELETE FROM messages WHERE messageID = ?', [req.params.messageID]);
 
-		if (resourceQuery.affectedRows > 0) return res.status(200).send({ message: 'resource deleted successfully.' });
-		return res.status(404).send({ message: 'Error : resource not found.' });
+		if (messageQuery.affectedRows > 0) return res.status(200).send({ message: 'message deleted successfully.' });
+		return res.status(404).send({ message: 'Error : message not found.' });
 
 	} catch (err) {
-		res.status(500).send({ message: 'Error : Unable to delete resource.', error: err.message });
+		res.status(500).send({ message: 'Error : Unable to delete message.', error: err.message });
 	}
 });
 
